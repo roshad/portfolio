@@ -1,0 +1,17 @@
+name: Update Portfolio Submodule
+
+on:
+  push:
+    branches:
+    - main # 或者是你的博客主分支
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Remote Dispatch
+      run: |
+        curl -X POST https://api.github.com/repos/roshad/portfolio/dispatches \
+        -H "Accept: application/vnd.github.v3+json" \
+        -H "Authorization: token ${{ secrets.PERSONAL_ACCESS_TOKEN }}" \
+        -d '{"event_type": "update-submodule"}'
