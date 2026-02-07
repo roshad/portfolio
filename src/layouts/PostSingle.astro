@@ -3,6 +3,7 @@ import BlogCard from "@/components/BlogCard.astro";
 import Share from "@/components/Share.astro";
 import Disqus from "@/helpers/Disqus";
 import { getSinglePage } from "@/lib/contentParser.astro";
+import { getPostDate, getPostTitle } from "@/lib/utils/contentHelpers";
 import dateFormat from "@/lib/utils/dateFormat";
 import similarItems from "@/lib/utils/similarItems";
 import { humanize, markdownify, slugify } from "@/lib/utils/textConverter";
@@ -16,7 +17,10 @@ const { post } = Astro.props;
 const posts = await getSinglePage(COLLECTION_FOLDER);
 const similarPosts = similarItems(post, posts);
 const { Content } = await render(post);
-const { title, description, author, categories, image, date, tags } = post.data;
+const { description, author, categories, image, tags } = post.data;
+
+const title = getPostTitle(post);
+const date = getPostDate(post.data);
 ---
 
 <section class="section pt-7">

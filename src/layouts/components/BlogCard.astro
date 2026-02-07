@@ -1,5 +1,6 @@
 ---
 import config from "@/config/config.json";
+import { getPostDate, getPostTitle } from "@/lib/utils/contentHelpers";
 import dateFormat from "@/lib/utils/dateFormat";
 import { humanize, plainify, slugify } from "@/lib/utils/textConverter";
 import { pinyin as pinyinLib } from "pinyin";
@@ -11,7 +12,11 @@ const {
   blog_folder,
 }: { summary_length: number; blog_folder: string } = config.settings;
 const { data } = Astro.props;
-const { title, image, date, author, categories } = data.data;
+const { image, author, categories } = data.data;
+
+const title = getPostTitle(data);
+const date = getPostDate(data.data);
+
 // compute a url-friendly slug: prefer provided slug, otherwise generate pinyin slug from title
 const itemSlug = data.data.slug
   ? String(data.data.slug)

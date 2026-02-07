@@ -1,0 +1,10 @@
+[
+    {
+        "group": "blog",
+        "slug": "blog/first-post",
+        "frontmatter": {
+            "title": "First Post"
+        },
+        "content": "This is a dummy post."
+    }
+]

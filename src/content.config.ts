@@ -14,7 +14,9 @@ const commonFields = {
 const blogCollection = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "src/content/blog" }),
   schema: z.object({
-    title: z.string(),
+    title: z.string().optional(),
+    "date created": z.union([z.string(), z.number()]).optional(),
+    "date modified": z.union([z.string(), z.number()]).optional(),
     meta_title: z.string().optional(),
     description: z.string().optional(),
     date: z.date().optional(),

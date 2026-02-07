@@ -28,15 +28,18 @@ const getData = (folder, groupDepth) => {
       // Use pinyin(title) fallback when title exists so filenames with
       // non-latin characters become URL-safe slugs.
       let slugVal = data.slug || null;
+      // Get title safely
+      const title = data.title || null;
+
       if (!slugVal) {
         // slice from CONTENT_DEPTH to keep folder (e.g. blog/filename)
         const parts = pathParts.slice(CONTENT_DEPTH);
         const folderPath = parts.slice(0, parts.length - 1).join("/");
         const fileName = parts[parts.length - 1].replace(/\.[^/.]+$/, "");
 
-        if (data.title) {
+        if (title) {
           // convert title to pinyin and then slugify
-          const titlePinyin = pinyinLib(data.title, {
+          const titlePinyin = pinyinLib(title, {
             style: pinyinLib.STYLE_NORMAL,
           })
             .flat()
@@ -44,17 +47,25 @@ const getData = (folder, groupDepth) => {
           const titleSlug = ghSlug(titlePinyin);
           slugVal = folderPath ? `${folderPath}/${titleSlug}` : titleSlug;
         } else {
-          // fallback to original filename (may be non-ASCII)
-          slugVal = parts.join("/");
+          // fallback to filename as slug
+          const fileSlug = ghSlug(fileName);
+          slugVal = folderPath ? `${folderPath}/${fileSlug}` : fileSlug;
         }
       }
+
       const slug = slugVal;
       const group = pathParts[groupDepth];
+
+      // Ensure we have a display title even if frontmatter is missing it
+      const displayTitle = title || slug.split('/').pop().replace(/-/g, ' ');
 
       return {
         group: group,
         slug: slug,
-        frontmatter: data,
+        frontmatter: {
+          ...data,
+          title: displayTitle
+        },
         content: content,
       };
     } else {

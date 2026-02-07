@@ -5,6 +5,7 @@ import config from "@/config/config.json";
 import Base from "@/layouts/Base.astro";
 import { getListPage, getSinglePage } from "@/lib/contentParser.astro";
 import { getAllTaxonomy, getTaxonomy } from "@/lib/taxonomyParser.astro";
+import { getPostTitle } from "@/lib/utils/contentHelpers";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 import PageHeader from "@/partials/PageHeader.astro";
 import PostSidebar from "@/partials/PostSidebar.astro";
@@ -12,6 +13,8 @@ import PostSidebar from "@/partials/PostSidebar.astro";
 const BLOG_FOLDER = "blog";
 
 const postIndex = await getListPage(BLOG_FOLDER, "-index");
+const postIndexTitle = getPostTitle(postIndex);
+
 if (postIndex.data.draft) {
   return Astro.redirect("/404");
 }
@@ -25,12 +28,12 @@ const currentPosts = sortedPosts.slice(0, config.settings.pagination);
 ---
 
 <Base
-  title={postIndex.data.title}
+  title={postIndexTitle}
   meta_title={postIndex.data.meta_title}
   image={postIndex.data.image}
   description={postIndex.data.description}
 >
-  <PageHeader title={postIndex?.data.title} />
+  <PageHeader title={postIndexTitle} />
   <section class="section">
     <div class="container">
       <div class="row gx-5">
