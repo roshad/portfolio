@@ -26,6 +26,9 @@ export const getPostDate = (data: any): Date => {
 
 export const getPostTitle = (post: any): string => {
     if (post.data.title) return post.data.title;
-    // Fallback to slug or id, removing extension
-    return post.slug || post.id.replace(/\.[^/.]+$/, "");
+    // Fallback to filename (from id) rather than slug, to preserve original characters
+    if (post.id) {
+        return decodeURIComponent(post.id).split('/').pop()!.replace(/\.[^/.]+$/, "");
+    }
+    return post.slug || "";
 };

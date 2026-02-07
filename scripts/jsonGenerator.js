@@ -24,18 +24,23 @@ const getData = (folder, groupDepth) => {
       const file = fs.readFileSync(filepath, "utf-8");
       const { data, content } = matter(file);
       const pathParts = filepath.split(path.sep);
+
+      // Extract fileName early so it can be used for display title
+      const parts = pathParts.slice(CONTENT_DEPTH);
+      const fileName = parts[parts.length - 1].replace(/\.[^/.]+$/, "");
+
       // Prefer explicit frontmatter slug; otherwise try to generate a slug
       // Use pinyin(title) fallback when title exists so filenames with
       // non-latin characters become URL-safe slugs.
       let slugVal = data.slug || null;
-      // Get title safely
+      // Get title safely - prioritize frontmatter title, then filename
       const title = data.title || null;
+      // For display purposes, use the original filename if no title in frontmatter
+      const displayTitle = data.title || fileName;
 
       if (!slugVal) {
         // slice from CONTENT_DEPTH to keep folder (e.g. blog/filename)
-        const parts = pathParts.slice(CONTENT_DEPTH);
         const folderPath = parts.slice(0, parts.length - 1).join("/");
-        const fileName = parts[parts.length - 1].replace(/\.[^/.]+$/, "");
 
         if (title) {
           // convert title to pinyin and then slugify
@@ -55,9 +60,6 @@ const getData = (folder, groupDepth) => {
 
       const slug = slugVal;
       const group = pathParts[groupDepth];
-
-      // Ensure we have a display title even if frontmatter is missing it
-      const displayTitle = title || slug.split('/').pop().replace(/-/g, ' ');
 
       return {
         group: group,
