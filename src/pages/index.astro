@@ -7,7 +7,7 @@ import { getListPage, getSinglePage } from "@/lib/contentParser.astro";
 import { getAllTaxonomy, getTaxonomy } from "@/lib/taxonomyParser.astro";
 import { getPostTitle } from "@/lib/utils/contentHelpers";
 import { sortByDate } from "@/lib/utils/sortFunctions";
-import PageHeader from "@/partials/PageHeader.astro";
+
 import PostSidebar from "@/partials/PostSidebar.astro";
 
 const BLOG_FOLDER = "blog";
@@ -33,8 +33,7 @@ const currentPosts = sortedPosts.slice(0, config.settings.pagination);
   image={postIndex.data.image}
   description={postIndex.data.description}
 >
-  <PageHeader title={postIndexTitle} />
-  <section class="section">
+  <section class="section pt-0">
     <div class="container">
       <div class="row gx-5">
         <!-- blog posts -->
